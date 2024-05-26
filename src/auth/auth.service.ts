@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+
+import { UserService } from '../user/user.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
-@Injectable()
+@Injectable() // Декоратор, що вказує, що цей клас є сервісом
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
+  constructor(private readonly userService: UserService) {} // Внедрення UserService
+
+  create(_: CreateAuthDto) {
     return 'This action adds a new auth';
   }
 
@@ -16,7 +20,7 @@ export class AuthService {
     return `This action returns a #${id} auth`;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
+  update(id: number, _: UpdateAuthDto) {
     return `This action updates a #${id} auth`;
   }
 
