@@ -1,12 +1,18 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { AppConfig } from './configs/configs.type';
 
 // Створюємо асинхронну функцію bootstrap для запуску додатку
 async function bootstrap() {
   const app = await NestFactory.create(AppModule); // Create a new Nest application
+
+  const configService = app.get(ConfigService); // Отримуємо сервіс конфігурації
+  const appConfig = configService.get<AppConfig>('app');
+
   const config = new DocumentBuilder() // Створюємо новий об'єкт DocumentBuilder, який дозволяє налаштувати документацію Swagger
     .setTitle('Example')
     .setDescription('The cats API description') // Встановлюємо заголовок та опис документації
@@ -35,9 +41,11 @@ async function bootstrap() {
     }),
   ); // Встановлюємо глобальний обробник ValidationPipe для перевірки вхідних даних
 
-  await app.listen(3000, '0.0.0.0', () => {
-    console.log('Server running on http://localhost:3000');
-    console.log('Swagger running on http://localhost:3000/docs');
+  await app.listen(appConfig.port, appConfig.host, () => {
+    console.log(`Server running on http://${appConfig.host}:${appConfig.port}`);
+    console.log(
+      `Swagger running on http://${appConfig.host}:${appConfig.port}/docs`,
+    );
   });
 }
 void bootstrap();

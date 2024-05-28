@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+//@ApiProperty - це декоратор, який дозволяє визначити властивості моделі, які будуть відображатися в документації Swagger. ApiProperty дозволяє визначити загальні властивості, такі як приклад, опис, обов'язковість, формат тощо.
 export class BaseUserResDto {
   @ApiProperty({
     example: '121324354678976543fdg',

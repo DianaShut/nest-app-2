@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserReqDto } from './dto/req/create-user.req.dto';
 import { UpdateUserReqDto } from './dto/req/update-user.req.dto';
 
-@Injectable()
+@Injectable() // Декоратор, що вказує, що цей клас є сервісом
 export class UserService {
   public async create(createUserDto: CreateUserReqDto): Promise<any> {
     return 'This action adds a new user';
