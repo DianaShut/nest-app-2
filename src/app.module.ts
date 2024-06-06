@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 
 import { AuthModule } from './auth/auth.module';
+import { GlobalExceptionFilter } from './common/http/global-exception.filter';
 import configuration from './configs/configs';
+import { LoggerModule } from './modules/logger/logger.module';
+import { PostgresModule } from './modules/postgres/postgres.module';
+import { RepositoryModule } from './modules/repository/repository.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -10,11 +15,19 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
-    }),
+    }), // Підключення конфігурації
+    RepositoryModule,
+    LoggerModule,
+    PostgresModule,
     UserModule,
     AuthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    }, // Підключення глобального фільтра для обробки винятків
+  ],
 })
 export class AppModule {}

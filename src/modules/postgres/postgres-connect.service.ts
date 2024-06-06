@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm'; // Імпорт інтерфейсів
 
-import { Config, DatabaseConfig } from '../configs/configs.type';
+import { Config, DatabaseConfig } from '../../configs/configs.type';
 
 @Injectable()
 export class PostgresConnectService implements TypeOrmOptionsFactory {
@@ -33,6 +33,7 @@ export class PostgresConnectService implements TypeOrmOptionsFactory {
         path.join(process.cwd(), 'src', 'database', 'migrations', '*.ts'),
       ],
       synchronize: false, // Відключає автоматичне синхронізування схеми бази даних
+      migrationsRun: true,
     };
   }
 }

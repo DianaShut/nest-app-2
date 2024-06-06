@@ -5,7 +5,7 @@ import {
 } from 'typeorm';
 
 export class BaseModel {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid') // Декоратор, який вказує, що це поле є первинним ключем
   id: string;
 
   @CreateDateColumn()

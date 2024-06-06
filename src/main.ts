@@ -11,7 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule); // Create a new Nest application
 
   const configService = app.get(ConfigService); // Отримуємо сервіс конфігурації
-  const appConfig = configService.get<AppConfig>('app');
+  const appConfig = configService.get<AppConfig>('app'); // Отримуємо конфігурацію додатку
 
   const config = new DocumentBuilder() // Створюємо новий об'єкт DocumentBuilder, який дозволяє налаштувати документацію Swagger
     .setTitle('Example')
