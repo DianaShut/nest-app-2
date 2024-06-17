@@ -5,9 +5,12 @@ import { APP_FILTER } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { GlobalExceptionFilter } from './common/http/global-exception.filter';
 import configuration from './configs/configs';
+import { ArticleModule } from './modules/article/article.module';
+import { FileStorageModule } from './modules/file-storage/file-storage.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
 import { RepositoryModule } from './modules/repository/repository.module';
+import { TagModule } from './modules/tag/tag.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -21,6 +24,9 @@ import { UserModule } from './user/user.module';
     PostgresModule,
     UserModule,
     AuthModule,
+    ArticleModule,
+    TagModule,
+    FileStorageModule,
   ],
   controllers: [],
   providers: [

@@ -5,6 +5,8 @@ import { BaseUserResDto } from './base-user.res.dto';
 export class UserResDto extends PickType(BaseUserResDto, [
   'id',
   'name',
-  'age',
-  'avatar',
+  'email',
+  'bio',
+  'image',
+  'isFollowed',
 ]) {}

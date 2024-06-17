@@ -3,6 +3,8 @@ export type Config = {
   database: DatabaseConfig;
   redis: RedisConfig;
   sentry: SentryConfig;
+  jwt: JWTConfig;
+  aws: AWSConfig;
 }; // тип конфігурації додатку
 
 export type AppConfig = {
@@ -28,4 +30,20 @@ export type SentryConfig = {
   dsn: string; // Data Source Name
   debug: boolean; // Режим налагодження (відладки) Sentry
   env: string; // Середовище виконання
+};
+
+export type JWTConfig = {
+  accessSecret: string;
+  accessExpiresIn: number;
+  refreshSecret: string;
+  refreshExpiresIn: number;
+};
+
+export type AWSConfig = {
+  region: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  bucketName: string;
+  bucketUrl: string;
+  endpoint: string;
 };

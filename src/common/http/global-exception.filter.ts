@@ -6,7 +6,8 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { LoggerService } from '../../modules/logger/logger.service'; // Імпортується сервіс LoggerService, який використовується для логування помилок.
+import { LoggerService } from '../../modules/logger/logger.service';
+import { QueryFailedError } from 'typeorm'; // Імпортується сервіс LoggerService, який використовується для логування помилок.
 
 @Catch() // Декоратор, який вказує, що клас є фільтром винятків. Він буде перехоплювати всі виключення, які виникають у додатку.
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -25,6 +26,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       messages = (exception as HttpException).message;
       status = exception.getStatus();
+    } else if (exception instanceof QueryFailedError) {
+      messages = exception.message;
+      status = 500;
     } else {
       status = 500;
       messages = 'Internal server error';

@@ -1,7 +1,9 @@
-export class UpdateUserReqDto {
-  public readonly name?: string;
+import { PickType } from '@nestjs/swagger';
 
-  public readonly avatar?: string;
+import { BaseUserReqDto } from './base-user.req.dto';
 
-  public readonly age?: number;
-}
+export class UpdateUserReqDto extends PickType(BaseUserReqDto, [
+  'bio',
+  'image',
+  'name',
+]) {}

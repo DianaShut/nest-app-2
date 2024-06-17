@@ -1,10 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, Unique } from 'typeorm';
 
 import { ArticleEntity } from './article.entity';
 import { TableNameEnum } from './enums/table-name.enum';
 import { BaseModel } from './models/base.model';
 import { UserEntity } from './user.entity';
 
+@Unique(['user_id', 'article_id'])
 @Entity({ name: TableNameEnum.LIKES })
 export class LikeEntity extends BaseModel {
   @Column()

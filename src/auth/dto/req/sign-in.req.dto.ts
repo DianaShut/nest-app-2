@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateAuthDto } from './create-auth.dto';
+import { PickType } from '@nestjs/swagger';
 
-export class UpdateAuthDto extends PartialType(CreateAuthDto) {}
+import { BaseAuthReqDto } from './base-auth.req.dto';
+
+export class SignInReqDto extends PickType(BaseAuthReqDto, [
+  'email',
+  'password',
+  'deviceId',
+]) {}

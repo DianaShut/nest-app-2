@@ -21,14 +21,19 @@ export class BaseUserResDto {
   public readonly email: string;
 
   @ApiProperty({
+    example: 'This is a bio',
+    description: 'The bio of the User',
+  })
+  public readonly bio?: string;
+
+  @ApiProperty({
     example: 'https://www.example.com/avatar.jpg',
     description: 'The avatar of the User',
   })
-  public readonly avatar?: string;
+  public readonly image?: string;
 
   @ApiProperty({
-    example: 20,
-    description: 'The age of the User',
+    description: 'The date the User was created',
   })
-  public readonly age?: number;
+  public readonly isFollowed?: boolean;
 }
