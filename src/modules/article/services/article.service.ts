@@ -4,7 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { In } from 'typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { EntityManager, In } from 'typeorm';
 
 import { IUserData } from '../../../auth/interfaces/user-data.interface';
 import { ArticleEntity } from '../../../database/entities/article.entity';
@@ -27,7 +28,10 @@ export class ArticleService {
     private readonly likeRepository: LikeRepository,
     private readonly articleRepository: ArticleRepository,
     private readonly tagRepository: TagRepository,
+    @InjectEntityManager()
+    private readonly entityManager: EntityManager,
   ) {}
+  //entityManager інжектується з TypeORM для управління транзакціями.
 
   public async getList(userData: IUserData, query: any): Promise<any> {
     const [entities, total] = await this.articleRepository.getList(
@@ -41,35 +45,35 @@ export class ArticleService {
     userData: IUserData,
     dto: CreateArticleReqDto,
   ): Promise<ArticleResDto> {
-    //Викликає метод createTags, щоб створити або знайти теги.
-    const tags = await this.createTags(dto.tags);
-    //Зберігає нову статтю в репозиторії
-    const article = await this.articleRepository.save(
-      this.articleRepository.create({
-        ...dto,
-        user_id: userData.userId,
-        tags,
-      }),
-    );
-    return ArticleMapper.toResponseDTO(article);
+    //Передається асинхронна функція, яка отримує спеціальний екземпляр EntityManager (em) для виконання операцій у межах транзакції.
+    return await this.entityManager.transaction('SERIALIZABLE', async (em) => {
+      const articleRepository = em.getRepository(ArticleEntity); //щоб отримати репозиторій статей для виконання операцій з базою даних.
+      const tags = await this.createTags(dto.tags, em); //
+      const article = await articleRepository.save(
+        this.articleRepository.create({
+          ...dto,
+          user_id: userData.userId,
+          tags,
+        }),
+      );
+      return ArticleMapper.toResponseDTO(article);
+    });
   }
 
-  private async createTags(tags: string[]): Promise<TagEntity[]> {
+  private async createTags(
+    tags: string[],
+    em: EntityManager,
+  ): Promise<TagEntity[]> {
     if (!tags || tags.length === 0) return [];
 
-    // Знаходимо теги, що вже існують у базі даних за їх іменами.
-    const entities = await this.tagRepository.findBy({ name: In(tags) });
-
-    // Створюємо набір з унікальних імен знайдених тегів.
+    const tagRepository = em.getRepository(TagEntity);
+    const entities = await tagRepository.findBy({ name: In(tags) });
     const existingTags = new Set(entities.map((tag) => tag.name));
-
-    // Фільтруємо нові теги, що ще не існують у базі даних.
     const newTags = tags.filter((tag) => !existingTags.has(tag));
 
-    const newEntities = await this.tagRepository.save(
-      newTags.map((name) => this.tagRepository.create({ name })),
+    const newEntities = await tagRepository.save(
+      newTags.map((name) => tagRepository.create({ name })),
     );
-    // Повертаємо масив всіх тегів, включаючи існуючі та нові.
     return [...entities, ...newEntities];
   }
 
