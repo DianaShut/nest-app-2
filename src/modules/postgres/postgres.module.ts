@@ -22,7 +22,7 @@ import { PostgresConnectService } from './postgres-connect.service';
     //       synchronize: true,
     //     };
     //   },
-    //   inject: [ConfigService],
+    //   inject: [ConfigService], - inject як constructor в сервісі
     // }),
   ],
   controllers: [],
